@@ -1,0 +1,13 @@
+[
+    {
+        "title": "Example Night Shift",
+        "intervals": [
+            {"id": "commute", "color": "orange", "start": "0800", "end": "0840"},
+            {"id": "awake", "color": "red", "start": "0840", "end": "0900"},
+            {"id": "sleep", "color": "blue", "start": "0900", "end": "1700"},
+            {"id": "awake", "color": "red", "start": "1700", "end": "1920"},
+            {"id": "commute", "color": "orange", "start": "1920", "end": "2000"},
+            {"id": "work", "color": "green", "start": "2000", "end": "0800"}
+        ]
+    }
+]

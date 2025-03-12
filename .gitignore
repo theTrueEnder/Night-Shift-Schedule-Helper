@@ -1,0 +1,3 @@
+images/*
+!images/example_night_shift.png
+myschedules.json
