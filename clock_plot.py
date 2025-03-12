@@ -37,41 +37,73 @@ def time_to_angle(time_str):
     return (total_minutes / 1440) * 2 * np.pi  # 1440 minutes in a day
 
 
+def duration_str(interval):
+    # Add duration labels in the middle of each interval (closer to the origin)
+    # Extract hours and minutes from the "HHMM" format
+    start_h, start_m = int(interval["start"][:2]), int(interval["start"][2:])
+    end_h, end_m =     int(interval["end"][:2]),   int(interval["end"][2:])
+
+    # Convert to total minutes for easy calculation
+    start_total_minutes = start_h * 60 + start_m
+    end_total_minutes = end_h * 60 + end_m
+
+    # Handle midnight crossover
+    if end_total_minutes < start_total_minutes:
+        end_total_minutes += 24 * 60
+
+    # Calculate duration in hours and minutes
+    duration_minutes = end_total_minutes - start_total_minutes
+    dur_h = duration_minutes // 60
+    dur_m = duration_minutes % 60
+
+    # Format the duration string
+    return f"{dur_h}h{dur_m:02d}m"
+
+
+
 # Create a clock plot from a given schedule
 def plot_schedule(schedule):
     # Create a polar plot with a larger figure
     fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize=(8, 8))
 
     # Configure the polar plot:
-    ax.set_theta_direction(-1)         # Clockwise
+    ax.set_theta_direction(-1)           # Clockwise
     ax.set_theta_offset(np.pi/2)         # 0 (midnight) at the top
     ax.set_xticklabels([])               # Remove degree (theta) axis labels
 
     # Plot each interval as an arc with thick line (linewidth 36)
     arc_radius = 1
     arc_thickness = 36
-    # We'll store the start and end angles for each interval to later place the ID labels.
-    interval_angles = []
+    
+    # interval_angles = []
     for interval in schedule["intervals"]:
         start_angle = time_to_angle(interval["start"])
         end_angle = time_to_angle(interval["end"])
+        
         # Adjust for intervals that span midnight
         if end_angle <= start_angle:
             end_angle += 2 * np.pi
+
         # Plot the arc
         theta = np.linspace(start_angle, end_angle, 200)
         r = np.full_like(theta, arc_radius)
         ax.plot(theta, r, color=interval["color"], linewidth=arc_thickness, solid_capstyle='butt', label=interval["id"])
+        
         # Save the mid-angle for placing the ID label (mod 2pi to keep it in [0,2pi))
         mid_angle = (start_angle + end_angle) / 2.0 % (2*np.pi)
-        interval_angles.append((mid_angle, interval["id"], interval["color"]))
-
-    # Add ID labels in the middle of each interval
-    for mid_angle, interval_id, arc_color in interval_angles:
-        # Using white text with a black outline for visibility regardless of background
-        ax.text(mid_angle, arc_radius, interval_id, ha='center', va='center',
+    
+        # Add ID labels in the middle of each interval
+        ax.text(mid_angle, arc_radius, interval["id"], ha='center', va='center',
                 fontsize=10, color='white',
-                bbox=dict(facecolor=arc_color, edgecolor='white', boxstyle='round,pad=0.2'))
+                bbox=dict(facecolor=interval["color"], edgecolor='white', boxstyle='round,pad=0.2'))
+        
+        text_rot = (270 -np.degrees(mid_angle)) % 360
+        if 90 <= text_rot <= 270:
+            text_rot += 180  # Flip for the left half
+            
+        ax.text(mid_angle, arc_radius - 0.30, duration_str(interval), ha='center', va='center',
+                fontsize=8, color='white', rotation=text_rot, 
+                bbox=dict(facecolor="grey", edgecolor='none', boxstyle='round,pad=0.2'))
 
     # Add markers for intersection times (if not exactly on the hour)
     # Intersection markers are at the boundaries of intervals.
@@ -85,8 +117,15 @@ def plot_schedule(schedule):
     for time_str in sorted(marker_times):
         # Check if the minutes are "00" (i.e. an hour marker)
         if int(time_str[2:]) == 0:
-            continue  # Skip; we'll add hour ticks separately
+            continue  # Skip; add hour ticks separately
+        
         angle = time_to_angle(time_str)
+        
+        # TODO: correct this angle and make label better
+        # text_rot = (270 -np.degrees(mid_angle)) % 360
+        # if 90 <= text_rot <= 270:
+            # text_rot += 180  # Flip for the left half
+            
         ax.plot(angle, intersection_radius, marker='o', markersize=8, color='black', alpha=0)
         ax.text(angle, intersection_radius + 0.08, time_str, ha='center', va='center', fontsize=10)
 
