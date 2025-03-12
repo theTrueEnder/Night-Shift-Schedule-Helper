@@ -91,16 +91,15 @@ def plot_schedule(schedule):
         
         # Save the mid-angle for placing the ID label (mod 2pi to keep it in [0,2pi))
         mid_angle = (start_angle + end_angle) / 2.0 % (2*np.pi)
-    
-        # Add ID labels in the middle of each interval
-        ax.text(mid_angle, arc_radius, interval["id"], ha='center', va='center',
-                fontsize=10, color='white',
-                bbox=dict(facecolor=interval["color"], edgecolor='white', boxstyle='round,pad=0.2'))
-        
-        text_rot = (270 -np.degrees(mid_angle)) % 360
+        text_rot = (270 - np.degrees(mid_angle)) % 360
         if 90 <= text_rot <= 270:
             text_rot += 180  # Flip for the left half
             
+        # Add ID labels in the middle of each interval
+        ax.text(mid_angle, arc_radius, interval["id"], ha='center', va='center',
+                fontsize=10, color='white', 
+                bbox=dict(facecolor=interval["color"], edgecolor='white', boxstyle='round,pad=0.2'))
+        
         ax.text(mid_angle, arc_radius - 0.30, duration_str(interval), ha='center', va='center',
                 fontsize=8, color='white', rotation=text_rot, 
                 bbox=dict(facecolor="grey", edgecolor='none', boxstyle='round,pad=0.2'))
@@ -120,14 +119,16 @@ def plot_schedule(schedule):
             continue  # Skip; add hour ticks separately
         
         angle = time_to_angle(time_str)
+        text_rot = (270 - np.degrees(angle)) % 360
+        if 90 <= text_rot <= 270:
+            text_rot += 180  # Flip for the left half
         
-        # TODO: correct this angle and make label better
-        # text_rot = (270 -np.degrees(mid_angle)) % 360
-        # if 90 <= text_rot <= 270:
-            # text_rot += 180  # Flip for the left half
-            
-        ax.plot(angle, intersection_radius, marker='o', markersize=8, color='black', alpha=0)
-        ax.text(angle, intersection_radius + 0.08, time_str, ha='center', va='center', fontsize=10)
+        time_str = time_str[:2] + ':' + time_str[2:]
+        
+        ax.plot(angle, intersection_radius + 0.05, marker='o', markersize=4, color='black', alpha=1)
+        ax.text(angle, intersection_radius + 0.15, time_str, rotation=text_rot, ha='center', va='center',
+                fontsize=8, color="black",
+                bbox=dict(facecolor="none", edgecolor='none', boxstyle='round,pad=0.2'))
 
     # Add an hour tick and label for each hour (00 to 23)
     # We'll draw a short radial line (tick) and label them at a slightly further radius.
