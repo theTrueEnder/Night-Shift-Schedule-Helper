@@ -38,6 +38,14 @@ def time_to_angle(time_str):
 
 
 def duration_str(interval):
+    """Convert two HHMM strings to the duration string of their difference
+
+    Args:
+        interval (_type_): JSON (dict) structure containing 'start' and 'end' keys
+
+    Returns:
+        str: String in the format "%d%dh%d%dm" (e.g. 2h50m, 11h00m)
+    """
     # Add duration labels in the middle of each interval (closer to the origin)
     # Extract hours and minutes from the "HHMM" format
     start_h, start_m = int(interval["start"][:2]), int(interval["start"][2:])
@@ -64,18 +72,17 @@ def duration_str(interval):
 # Create a clock plot from a given schedule
 def plot_schedule(schedule):
     # Create a polar plot with a larger figure
-    fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize=(8, 8))
+    fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize=(8, 8), facecolor='darkgrey')
 
     # Configure the polar plot:
     ax.set_theta_direction(-1)           # Clockwise
     ax.set_theta_offset(np.pi/2)         # 0 (midnight) at the top
     ax.set_xticklabels([])               # Remove degree (theta) axis labels
 
-    # Plot each interval as an arc with thick line (linewidth 36)
+    # Plot each interval as an arc with thick line
     arc_radius = 1
     arc_thickness = 36
     
-    # interval_angles = []
     for interval in schedule["intervals"]:
         start_angle = time_to_angle(interval["start"])
         end_angle = time_to_angle(interval["end"])
@@ -89,17 +96,18 @@ def plot_schedule(schedule):
         r = np.full_like(theta, arc_radius)
         ax.plot(theta, r, color=interval["color"], linewidth=arc_thickness, solid_capstyle='butt', label=interval["id"])
         
-        # Save the mid-angle for placing the ID label (mod 2pi to keep it in [0,2pi))
+        # Save the middle angle of interval (mod 2pi to keep it in [0,2pi))
         mid_angle = (start_angle + end_angle) / 2.0 % (2*np.pi)
         text_rot = (270 - np.degrees(mid_angle)) % 360
         if 90 <= text_rot <= 270:
             text_rot += 180  # Flip for the left half
             
-        # Add ID labels in the middle of each interval
+        # Add interval title labels
         ax.text(mid_angle, arc_radius, interval["id"], ha='center', va='center',
                 fontsize=10, color='white', 
                 bbox=dict(facecolor=interval["color"], edgecolor='white', boxstyle='round,pad=0.2'))
         
+        # Add duration labels
         ax.text(mid_angle, arc_radius - 0.30, duration_str(interval), ha='center', va='center',
                 fontsize=8, color='white', rotation=text_rot, 
                 bbox=dict(facecolor="grey", edgecolor='none', boxstyle='round,pad=0.2'))
@@ -118,48 +126,48 @@ def plot_schedule(schedule):
         if int(time_str[2:]) == 0:
             continue  # Skip; add hour ticks separately
         
+        # Rotate intersection labels to be parallel to the polar line
         angle = time_to_angle(time_str)
         text_rot = (270 - np.degrees(angle)) % 360
         if 90 <= text_rot <= 270:
             text_rot += 180  # Flip for the left half
         
         time_str = time_str[:2] + ':' + time_str[2:]
-        
         ax.plot(angle, intersection_radius + 0.05, marker='o', markersize=4, color='black', alpha=1)
         ax.text(angle, intersection_radius + 0.15, time_str, rotation=text_rot, ha='center', va='center',
                 fontsize=8, color="black",
                 bbox=dict(facecolor="none", edgecolor='none', boxstyle='round,pad=0.2'))
 
     # Add an hour tick and label for each hour (00 to 23)
-    # We'll draw a short radial line (tick) and label them at a slightly further radius.
+    # Draw a short radial line (tick) and label them at a slightly further radius.
     tick_inner = 1.17
     tick_outer = 1.25
     for hour in range(24):
         # Convert hour to angle using the "HHMM" format.
-        time_str = f"{hour:02d}00"
-        angle = time_to_angle(time_str)
+        angle = time_to_angle(f"{hour:02d}00")
         # Draw a tick line from tick_inner to tick_outer
         ax.plot([angle, angle], [tick_inner, tick_outer], color='black', lw=2)
         # Label the hour just outside the tick
         ax.text(angle, tick_outer + 0.05, f"{hour:02d}", ha='center', va='center', fontsize=8)
-    #     ax.text(angle, tick_outer, f"{hour:02d}", ha='center', va='bottom', fontsize=10)
 
     # Remove radial tick labels and set radius limits
     ax.set_yticklabels([])
     ax.set_ylim(0, 1.4)
     plt.title(schedule['title'], fontsize=14)
 
-    # Save the updated plot as a PNG file
+    # Save the updated plot as a PNG file in /images and reveal to the screen
     plt.savefig(f"images/{snake_case(schedule["title"])}.png", dpi=300, bbox_inches='tight')
-    plt.show()
+    print(f'"{schedule["title"]}" saved to /images.')
+    # plt.show()
 
 
 
 if __name__ == "__main__":
-    # open schedules file
+    # Open schedules file
     with open('schedules.json', 'r') as f:
         data = json.load(f)
 
+    # Select an individual plot if needed
     # data = data[0]
 
     # if only one plot selected, only plot one
@@ -169,5 +177,6 @@ if __name__ == "__main__":
         print('Plotting 1 of 1')
         plot_schedule(data)
     except TypeError:
-        for schedule in data:
-            plot_schedule(schedule)
+        for i in range(len(data)):
+            print(f'Plotting {i+1} of {len(data)}')
+            plot_schedule(data[i])
