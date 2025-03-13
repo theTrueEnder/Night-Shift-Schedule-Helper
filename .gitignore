@@ -1,3 +1,8 @@
-images/*
-!images/example_night_shift.png
+results/*
+!results/example_night_shift.png
+!results/example_dynamic_schedule.png
+!results/example_dynamic_schedule.csv
 myschedules.json
+dynamic_schedule.csv
+old_clock_plot.py
+/__pycache__
