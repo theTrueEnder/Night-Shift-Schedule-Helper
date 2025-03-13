@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 
-class NightShiftScheduler:
-    def __init__(self, config_path):
+class SheetScheduler:
+    def __init__(self, config_path='config.json'):
         self.config_path = config_path
         self.time_slots = [f"{h:02}:{m:02}" for h in range(24) for m in (0, 30)]
         self.days_of_week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -137,7 +137,7 @@ class NightShiftScheduler:
             plt.show()
 
 if __name__ == "__main__":
-    scheduler = NightShiftScheduler('config.json')
+    scheduler = SheetScheduler('config.json')
     scheduler.display_schedule()
     scheduler.plot_schedule()
     scheduler.save_to_png()

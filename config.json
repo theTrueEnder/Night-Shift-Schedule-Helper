@@ -1,50 +1,174 @@
 {
-    "workdays": ["Monday", "Tuesday", "Wednesday"],
+    "workdays": [
+        "Monday",
+        "Tuesday",
+        "Wednesday"
+    ],
     "prev_week_night": false,
     "next_week_night": false,
     "schedule_patterns": [
         {
             "title": "Night shift",
             "intervals": [
-                {"id": "commute", "color": "orange", "start": "1800", "end": "1900"},
-                {"id": "work",    "color": "purple",    "start": "1900", "end": "0700"},
-                {"id": "commute", "color": "orange", "start": "0700", "end": "0800"},
-                {"id": "sleep",   "color": "blue",   "start": "0800", "end": "1800"}
+                {
+                    "id": "commute",
+                    "color": "orange",
+                    "start": "1800",
+                    "end": "1900"
+                },
+                {
+                    "id": "work",
+                    "color": "purple",
+                    "start": "1900",
+                    "end": "0700"
+                },
+                {
+                    "id": "commute",
+                    "color": "orange",
+                    "start": "0700",
+                    "end": "0800"
+                },
+                {
+                    "id": "sleep",
+                    "color": "blue",
+                    "start": "0800",
+                    "end": "1800"
+                }
             ]
-        },{
-            "title": "Off day (Night → Off)",
+        },
+        {
+            "title": "Off day (Night \u00e2\u2020\u2019 Off)",
             "intervals": [
-                {"id": "commute", "color": "orange", "start": "0700", "end": "0800"},
-                {"id": "sleep",   "color": "blue",   "start": "0800", "end": "1600"},
-                {"id": "awake",   "color": "green",  "start": "1600", "end": "0100"},
-                {"id": "sleep",   "color": "blue",   "start": "0100", "end": "0700"}
+                {
+                    "id": "commute",
+                    "color": "orange",
+                    "start": "0700",
+                    "end": "0800"
+                },
+                {
+                    "id": "sleep",
+                    "color": "blue",
+                    "start": "0800",
+                    "end": "1600"
+                },
+                {
+                    "id": "awake",
+                    "color": "green",
+                    "start": "1600",
+                    "end": "0100"
+                },
+                {
+                    "id": "sleep",
+                    "color": "blue",
+                    "start": "0100",
+                    "end": "0700"
+                }
             ]
-        },{
-            "title": "Off day (Off → Night)",
+        },
+        {
+            "title": "Off day (Off \u00e2\u2020\u2019 Night)",
             "intervals": [
-                {"id": "commute", "color": "orange", "start": "0700", "end": "0800"},
-                {"id": "sleep",   "color": "blue",   "start": "0800", "end": "1630"},
-                {"id": "awake",   "color": "green",  "start": "1630", "end": "1800"},
-                {"id": "commute", "color": "orange", "start": "1800", "end": "1900"},
-                {"id": "sleep",    "color": "blue",    "start": "1900", "end": "0700"}
+                {
+                    "id": "commute",
+                    "color": "orange",
+                    "start": "0700",
+                    "end": "0800"
+                },
+                {
+                    "id": "sleep",
+                    "color": "blue",
+                    "start": "0800",
+                    "end": "1630"
+                },
+                {
+                    "id": "awake",
+                    "color": "green",
+                    "start": "1630",
+                    "end": "1800"
+                },
+                {
+                    "id": "commute",
+                    "color": "orange",
+                    "start": "1800",
+                    "end": "1900"
+                },
+                {
+                    "id": "sleep",
+                    "color": "blue",
+                    "start": "1900",
+                    "end": "0700"
+                }
             ]
-        },{
-            "title": "Off day (Off → Off)",
+        },
+        {
+            "title": "Off day (Off \u00e2\u2020\u2019 Off)",
             "intervals": [
-                {"id": "commute", "color": "orange", "start": "1800", "end": "1900"},
-                {"id": "sleep",    "color": "blue",    "start": "1900", "end": "0700"},
-                {"id": "commute", "color": "orange", "start": "0700", "end": "0800"},
-                {"id": "awake",   "color": "blue",   "start": "0800", "end": "1800"}
+                {
+                    "id": "commute",
+                    "color": "orange",
+                    "start": "1800",
+                    "end": "1900"
+                },
+                {
+                    "id": "sleep",
+                    "color": "blue",
+                    "start": "1900",
+                    "end": "0700"
+                },
+                {
+                    "id": "commute",
+                    "color": "orange",
+                    "start": "0700",
+                    "end": "0800"
+                },
+                {
+                    "id": "awake",
+                    "color": "blue",
+                    "start": "0800",
+                    "end": "1800"
+                }
             ]
-        },{
-            "title": "Off day (Night → Night)",
+        },
+        {
+            "title": "Off day (Night \u00e2\u2020\u2019 Night)",
             "intervals": [
-                {"id": "commute", "color": "orange", "start": "0700", "end": "0800"},
-                {"id": "sleep",   "color": "blue",   "start": "0800", "end": "1630"},
-                {"id": "awake",   "color": "green",  "start": "1630", "end": "1800"},
-                {"id": "commute", "color": "orange", "start": "1800", "end": "1900"},
-                {"id": "sleep",    "color": "blue",    "start": "1900", "end": "0700"}
+                {
+                    "id": "commute",
+                    "color": "orange",
+                    "start": "0700",
+                    "end": "0800"
+                },
+                {
+                    "id": "sleep",
+                    "color": "blue",
+                    "start": "0800",
+                    "end": "1630"
+                },
+                {
+                    "id": "awake",
+                    "color": "green",
+                    "start": "1630",
+                    "end": "1800"
+                },
+                {
+                    "id": "commute",
+                    "color": "orange",
+                    "start": "1800",
+                    "end": "1900"
+                },
+                {
+                    "id": "sleep",
+                    "color": "blue",
+                    "start": "1900",
+                    "end": "0700"
+                }
             ]
         }
-    ]
+    ],
+    "colors": {
+        "awake": "#00ff00",
+        "asleep": "#0055ff",
+        "commute": "#ff5500",
+        "work": "#5500ff"
+    }
 }

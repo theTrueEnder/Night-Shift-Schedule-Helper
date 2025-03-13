@@ -1,3 +1,5 @@
 images/*
 !images/example_night_shift.png
 myschedules.json
+dynamic_schedule.csv
+old_clock_plot.py
