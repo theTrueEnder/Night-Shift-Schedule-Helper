@@ -1,10 +1,12 @@
 import json
 import sys
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton, QLabel,
-                             QColorDialog, QComboBox, QFileDialog)
+                             QColorDialog, QComboBox, QFileDialog, QSpacerItem, QSizePolicy)
 from PyQt6.QtGui import QColor
-from schedule_spreadsheet_generator import SheetScheduler
-from clock_plot import SchedulePlotter
+from PyQt6.QtCore import Qt
+
+from scheduler_sheet import SheetScheduler
+from scheduler_clock_plot import SchedulePlotter
 
 CONFIG_FILE = "config.json"
 
@@ -32,7 +34,7 @@ class WorkScheduleApp(QWidget):
 
         # Workdays Section
         workdays_layout = QVBoxLayout()
-        workdays_layout.addWidget(QLabel("Select Workdays:"))
+        workdays_layout.addWidget(QLabel("<h3>Select Workdays:</h3>"))
         self.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         self.day_checkboxes = {day: QCheckBox(day) for day in self.days}
         for day, checkbox in self.day_checkboxes.items():
@@ -42,7 +44,7 @@ class WorkScheduleApp(QWidget):
 
         # Colors Section
         colors_layout = QVBoxLayout()
-        colors_layout.addWidget(QLabel("Select Colors:"))
+        colors_layout.addWidget(QLabel("<h3>Select Colors:</h3>"))
         self.color_selectors = {}
         for category in ["awake", "asleep", "commute", "work"]:
             btn = QPushButton(f"Select {category.capitalize()} Color")
@@ -50,28 +52,38 @@ class WorkScheduleApp(QWidget):
             self.color_selectors[category] = btn
             colors_layout.addWidget(btn)
 
-        workdays_colors_layout.addLayout(colors_layout)
-
+        colors_layout.addStretch()
+        workdays_colors_layout.addLayout(colors_layout)        
         main_layout.addLayout(workdays_colors_layout)
 
         # Previous/Next Week Night Checkboxes
-        self.prev_week_night = QCheckBox("Previous Week Night")
-        self.next_week_night = QCheckBox("Next Week Night")
+        self.prev_week_night = QCheckBox("< Previous Week Night")
+        self.next_week_night = QCheckBox("> Next Week Night")
         main_layout.addWidget(self.prev_week_night)
         main_layout.addWidget(self.next_week_night)
 
+        # Save Button
+        save_btn = QPushButton("Save")
+        save_btn.setStyleSheet("background-color: green; color: white;")
+        save_btn.clicked.connect(self.save_settings)
+        main_layout.addWidget(save_btn)
+
+        verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        main_layout.addItem(verticalSpacer)
+        
         # Clock Plot and Dynamic Schedule Section (Side by Side)
         plot_schedule_layout = QHBoxLayout()
 
         # Generate Clock Plot Section
         clock_plot_layout = QVBoxLayout()
-        clock_plot_layout.addWidget(QLabel("Generate Clock Plot:"))
+        clock_plot_layout.addWidget(QLabel("<h3>Generate Clock Plot:</h3>"))
         self.clock_plot_dropdown = QComboBox()
-        self.clock_plot_dropdown.addItems(["Night shift", "Off day (Night → Night)", "Off day (Night → Off)",
-                                           "Off day (Off → Night)", "Off day (Off → Off)"])
+        self.clock_plot_dropdown.addItems(["Night shift", "Off day (Night-Night)", "Off day (Night-Off)",
+                                           "Off day (Off-Night)", "Off day (Off-Off)"])
         clock_plot_layout.addWidget(self.clock_plot_dropdown)
 
-        self.clock_plot_save_image = QCheckBox("Save Image")
+        self.clock_plot_save_image = QCheckBox("Save Results (PNG)")
+        self.clock_plot_save_image.setChecked(True)
         clock_plot_layout.addWidget(self.clock_plot_save_image)
 
         clock_plot_btn = QPushButton("Run")
@@ -82,24 +94,25 @@ class WorkScheduleApp(QWidget):
 
         # Generate Dynamic Schedule Section
         dynamic_schedule_layout = QVBoxLayout()
-        dynamic_schedule_layout.addWidget(QLabel("Generate Dynamic Schedule:"))
-        self.dynamic_schedule_save_image = QCheckBox("Save Image")
+        dynamic_schedule_layout.addWidget(QLabel("<h3>Generate Dynamic Schedule:</h3>"))
+        self.dynamic_schedule_save_image = QCheckBox("Save Results (PNG, CSV)")
+        self.dynamic_schedule_save_image.setChecked(True)
         dynamic_schedule_layout.addWidget(self.dynamic_schedule_save_image)
+        
 
         dynamic_schedule_btn = QPushButton("Run")
         dynamic_schedule_btn.clicked.connect(self.run_dynamic_schedule)
         dynamic_schedule_layout.addWidget(dynamic_schedule_btn)
+        dynamic_schedule_layout.addStretch()
 
         plot_schedule_layout.addLayout(dynamic_schedule_layout)
 
         main_layout.addLayout(plot_schedule_layout)
+        main_layout.addItem(verticalSpacer)
 
-        # Save and Exit Buttons
-        save_btn = QPushButton("Save")
-        save_btn.clicked.connect(self.save_settings)
-        main_layout.addWidget(save_btn)
-
+        # Exit Button
         exit_btn = QPushButton("Exit")
+        exit_btn.setStyleSheet("background-color: red; color: white;")
         exit_btn.clicked.connect(self.close)
         main_layout.addWidget(exit_btn)
 
@@ -144,15 +157,15 @@ class WorkScheduleApp(QWidget):
         save_image = self.dynamic_schedule_save_image.isChecked()
         print(f"Running Dynamic Schedule, Save Image: {save_image}")
         scheduler = SheetScheduler('config.json')
-        scheduler.display_schedule()
         scheduler.plot_schedule()
-        scheduler.save_to_csv()
         if save_image:
             scheduler.save_to_csv()
+            scheduler.save_to_png()
         
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = WorkScheduleApp()
+    window.setWindowTitle("Night Shift Schedule Helper")
     window.show()
     sys.exit(app.exec())

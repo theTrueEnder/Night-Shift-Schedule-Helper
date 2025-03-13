@@ -37,7 +37,7 @@
             ]
         },
         {
-            "title": "Off day (Night \u00e2\u2020\u2019 Off)",
+            "title": "Off day (Night-Off)",
             "intervals": [
                 {
                     "id": "commute",
@@ -66,7 +66,7 @@
             ]
         },
         {
-            "title": "Off day (Off \u00e2\u2020\u2019 Night)",
+            "title": "Off day (Off-Night)",
             "intervals": [
                 {
                     "id": "commute",
@@ -101,7 +101,7 @@
             ]
         },
         {
-            "title": "Off day (Off \u00e2\u2020\u2019 Off)",
+            "title": "Off day (Off-Off)",
             "intervals": [
                 {
                     "id": "commute",
@@ -130,7 +130,7 @@
             ]
         },
         {
-            "title": "Off day (Night \u00e2\u2020\u2019 Night)",
+            "title": "Off day (Night-Night)",
             "intervals": [
                 {
                     "id": "commute",

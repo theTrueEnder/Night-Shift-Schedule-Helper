@@ -124,8 +124,9 @@ class SchedulePlotter:
 
         # Save image if set, then plot
         if self.save_image:
-            plt.savefig(f"images/{self.snake_case(title)}.png", dpi=300, bbox_inches='tight')
-            print(f'"{title}" saved to /images.')
+            filename = f"results/{self.snake_case(title)}.png"
+            plt.savefig(filename, dpi=300, bbox_inches='tight')
+            print(f'Saved clock plot to PNG at {filename}.')
             
         plt.show()
 

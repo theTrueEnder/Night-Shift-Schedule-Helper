@@ -63,13 +63,13 @@ class SheetScheduler:
         next_night = self.config['next_week_night'] if day == "Saturday" else next_day in self.config['workdays']
 
         if prev_night and next_night:
-            return "Off day (Night → Night)"
+            return "Off day (Night-Night)"
         elif prev_night:
-            return "Off day (Night → Off)"
+            return "Off day (Night-Off)"
         elif next_night:
-            return "Off day (Off → Night)"
+            return "Off day (Off-Night)"
         else:
-            return "Off day (Off → Off)"
+            return "Off day (Off-Off)"
 
     def get_activity_colors(self):
         """Extract activity colors from the configuration."""
@@ -82,13 +82,15 @@ class SheetScheduler:
         """Print the generated schedule."""
         print(self.schedule)
 
-    def save_to_csv(self, filename="dynamic_schedule.csv"):
+    def save_to_csv(self, filename="results/dynamic_schedule.csv"):
         """Save the schedule to a CSV file."""
         self.schedule.to_csv(filename)
+        print(f'Saved dynamic schedule to CSV at {filename}.')
 
-    def save_to_png(self, filename="images/dynamic_schedule.png"):
+    def save_to_png(self, filename="results/dynamic_schedule.png"):
         """Save the plotted schedule to a PNG file."""
         self.plot_schedule(save_path=filename)
+        print(f'Saved dynamic schedule to PNG at {filename}.')
 
     def plot_schedule(self, save_path=None):
         """Visualize the schedule using a heatmap."""
