@@ -3,3 +3,4 @@ images/*
 myschedules.json
 dynamic_schedule.csv
 old_clock_plot.py
+/__pycache__

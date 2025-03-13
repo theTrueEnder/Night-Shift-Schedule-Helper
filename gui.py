@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QC
                              QColorDialog, QComboBox, QFileDialog)
 from PyQt6.QtGui import QColor
 from schedule_spreadsheet_generator import SheetScheduler
-
+from clock_plot import SchedulePlotter
 
 CONFIG_FILE = "config.json"
 
@@ -136,16 +136,19 @@ class WorkScheduleApp(QWidget):
         option = self.clock_plot_dropdown.currentText()
         save_image = self.clock_plot_save_image.isChecked()
         print(f"Running Clock Plot: {option}, Save Image: {save_image}")
+        scheduler = SchedulePlotter(save_image)
+        scheduler.load_schedule_data(file_path='config.json')
+        scheduler.plot_one_schedule(option)
 
     def run_dynamic_schedule(self):
         save_image = self.dynamic_schedule_save_image.isChecked()
         print(f"Running Dynamic Schedule, Save Image: {save_image}")
-        nss = SheetScheduler()
-        nss.display_schedule()
-        nss.plot_schedule()
-        nss.save_to_csv()
+        scheduler = SheetScheduler('config.json')
+        scheduler.display_schedule()
+        scheduler.plot_schedule()
+        scheduler.save_to_csv()
         if save_image:
-            nss.save_to_csv
+            scheduler.save_to_csv()
         
 
 if __name__ == '__main__':
