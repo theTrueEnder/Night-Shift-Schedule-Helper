@@ -21,9 +21,9 @@ The second plot type is a spreadsheet-style plot. Instead of graphing one day, l
 Notably, the sheet schedule bears a resemblance to a spreadsheet. I originally tried to implement this in Microsoft Excel, but failed and decided Python was much more fun. However, the sheet schedule contains a .csv export function, so the static output of the sheet schedule can actually be imported to Excel (or Google Sheets) if that is desirable for you. See the example at [`example-schedule-sheet.csv`](example-files/example-schedule-sheet.csv)
 
 ## Installation
-> [!Warning] This project was developed and works on Python 3.13. I am not sure what minor of Python 3 will break it, but most likely you need at least 3.8 or 3.10.
+> :warning: This project was developed and works on Python 3.13. I am not sure what minor of Python 3 will break it, but most likely you need at least 3.8 or 3.10.
 
-> [!Warning] This project was tested on a Windows 11 machine. The Python code itself shouldn't have issues on a Mac/Linux machine, but I'm not 100% sure if the path characters ('/' vs '\') might break something. Cross-platform testing is on the TODOs, stay tuned!
+> :warning: This project was tested on a Windows 11 machine. The Python code itself shouldn't have issues on a Mac/Linux machine, but I'm not 100% sure if the path characters ('/' vs '\') might break something. Cross-platform testing is on the TODOs, stay tuned!
 1. Download the .zip of this project and extract it (the green `Code` button)
 2. Open a terminal in the extracted directory
 3. `pip install -r requirements.txt`
