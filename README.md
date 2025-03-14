@@ -22,11 +22,14 @@ Notably, the sheet schedule bears a resemblance to a spreadsheet. I originally t
 
 ## Installation
 > [!Warning] This project was developed and works on Python 3.13. I am not sure what minor of Python 3 will break it, but most likely you need at least 3.8 or 3.10.
+
+> [!Warning] This project was tested on a Windows 11 machine. The Python code itself shouldn't have issues on a Mac/Linux machine, but I'm not 100% sure if the path characters ('/' vs '\') might break something. Cross-platform testing is on the TODOs, stay tuned!
 1. Download the .zip of this project and extract it (the green `Code` button)
 2. Open a terminal in the extracted directory
 3. `pip install -r requirements.txt`
 
 ## Usage
+
 Once you have the dependencies installed (see Installation), adjust the [`config.json`](config-files/config.json) to your liking. [`config.json`](config-files/config.json) and [`example-config.json`](config-files/example-config.json) are the same out-of-the box: this is intentional. This way, you have a starting point to work from in your personalized schedule, and you can always load [`example-config.json`](config-files/example-config.json) in the GUI if you ever need to look back. If you want to start from scratch, use the [`template.json`](config-files/template.json).
 
 > [!tip]
@@ -43,6 +46,7 @@ Each of the individual schedulers can be run, though they use [`example-config.j
 __TODO__
 
  ## TODOs
+- [ ] Cross-platform testing
 - [ ] Meals
 - [ ] Reduce `requirements.txt`
 - [ ] Short file path
