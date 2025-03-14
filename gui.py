@@ -8,7 +8,7 @@ from PyQt6.QtCore import Qt
 from scheduler_sheet import SheetScheduler
 from scheduler_clock_plot import SchedulePlotter
 
-CONFIG_FILE = "config.json"
+CONFIG_FILE = "config-files/config.json"
 
 def load_config():
     try:
@@ -34,33 +34,56 @@ class WorkScheduleApp(QWidget):
 
         # Workdays Section
         workdays_layout = QVBoxLayout()
-        workdays_layout.addWidget(QLabel("<h3>Select Workdays:</h3>"))
-        self.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        lbl = QLabel("<h3>Select Workdays:</h3>")
+        lbl.setAlignment(Qt.AlignmentFlag.AlignBottom)
+        workdays_layout.addWidget(lbl)
+        self.prev_week_night = QCheckBox("< Prev Saturday")
+        workdays_layout.addWidget(self.prev_week_night)
+        self.days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         self.day_checkboxes = {day: QCheckBox(day) for day in self.days}
         for day, checkbox in self.day_checkboxes.items():
             workdays_layout.addWidget(checkbox)
 
         workdays_colors_layout.addLayout(workdays_layout)
 
+        # Previous/Next Week Night Checkboxes
+        self.next_week_night = QCheckBox("> Next Sunday")
+        workdays_layout.addWidget(self.next_week_night)
+        workdays_layout.addStretch()
+
+
         # Colors Section
         colors_layout = QVBoxLayout()
         colors_layout.addWidget(QLabel("<h3>Select Colors:</h3>"))
         self.color_selectors = {}
+
+        # Color Pickers - Top Justified
         for category in ["awake", "asleep", "commute", "work"]:
             btn = QPushButton(f"Select {category.capitalize()} Color")
             btn.clicked.connect(lambda _, c=category: self.select_color(c))
             self.color_selectors[category] = btn
             colors_layout.addWidget(btn)
 
+        # Spacer to Push File Picker to Bottom
         colors_layout.addStretch()
+
+        # File Picker - Bottom Justified
+        verticalSpacer = QSpacerItem(10, 30, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        colors_layout.addItem(verticalSpacer)
+        colors_layout.addWidget(QLabel("<h3>Select Config File:</h3>"))
+        self.file_label = QLabel("Config File: <code>config-files/config.json</code>")
+        colors_layout.addWidget(self.file_label)
+
+        file_btn = QPushButton("Select Config File")
+        file_btn.clicked.connect(self.select_config_file)
+        colors_layout.addWidget(file_btn)
+
         workdays_colors_layout.addLayout(colors_layout)        
         main_layout.addLayout(workdays_colors_layout)
+        main_layout.addItem(QSpacerItem(10, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
+        
 
-        # Previous/Next Week Night Checkboxes
-        self.prev_week_night = QCheckBox("< Previous Week Night")
-        self.next_week_night = QCheckBox("> Next Week Night")
-        main_layout.addWidget(self.prev_week_night)
-        main_layout.addWidget(self.next_week_night)
+        
 
         # Save Button
         save_btn = QPushButton("Save")
@@ -68,18 +91,22 @@ class WorkScheduleApp(QWidget):
         save_btn.clicked.connect(self.save_settings)
         main_layout.addWidget(save_btn)
 
-        verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        verticalSpacer = QSpacerItem(20, 30, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         main_layout.addItem(verticalSpacer)
         
         # Clock Plot and Dynamic Schedule Section (Side by Side)
         plot_schedule_layout = QHBoxLayout()
 
+
+
+
         # Generate Clock Plot Section
         clock_plot_layout = QVBoxLayout()
         clock_plot_layout.addWidget(QLabel("<h3>Generate Clock Plot:</h3>"))
         self.clock_plot_dropdown = QComboBox()
-        self.clock_plot_dropdown.addItems(["Night shift", "Off day (Night-Night)", "Off day (Night-Off)",
-                                           "Off day (Off-Night)", "Off day (Off-Off)"])
+        
+        self.titles = [schedule['title'] for schedule in self.config['schedule_patterns']]
+        self.clock_plot_dropdown.addItems(self.titles)
         clock_plot_layout.addWidget(self.clock_plot_dropdown)
 
         self.clock_plot_save_image = QCheckBox("Save Results (PNG)")
@@ -95,6 +122,8 @@ class WorkScheduleApp(QWidget):
         # Generate Dynamic Schedule Section
         dynamic_schedule_layout = QVBoxLayout()
         dynamic_schedule_layout.addWidget(QLabel("<h3>Generate Dynamic Schedule:</h3>"))
+        
+        
         self.dynamic_schedule_save_image = QCheckBox("Save Results (PNG, CSV)")
         self.dynamic_schedule_save_image.setChecked(True)
         dynamic_schedule_layout.addWidget(self.dynamic_schedule_save_image)
@@ -119,6 +148,21 @@ class WorkScheduleApp(QWidget):
         self.setLayout(main_layout)
         self.load_settings()
 
+
+    def select_config_file(self):
+        file_dialog = QFileDialog()
+        file_path, _ = file_dialog.getOpenFileName(self, "Select Config File", "", "JSON Files (*.json);;All Files (*)")
+        if file_path:
+            global CONFIG_FILE
+            CONFIG_FILE = file_path
+            # TODO
+            # loc = max(file_path.index('/'), file_path.index('\\'))
+            # short_file_path = file_path[loc+1:]
+            short_file_path = file_path
+            self.file_label.setText(f"Config File: <code>{short_file_path}</code>")
+            self.config = load_config()
+            self.load_settings()
+
     def load_settings(self):
         for day, checkbox in self.day_checkboxes.items():
             checkbox.setChecked(day in self.config.get("workdays", []))
@@ -135,6 +179,7 @@ class WorkScheduleApp(QWidget):
         self.config["prev_week_night"] = self.prev_week_night.isChecked()
         self.config["next_week_night"] = self.next_week_night.isChecked()
         self.config["colors"] = {category: self.color_selectors[category].palette().button().color().name() for category in self.color_selectors}
+        self.config["colors"].update({"empty": "#FFFFFF"})
         save_config(self.config)
 
     def select_color(self, category):
@@ -150,13 +195,13 @@ class WorkScheduleApp(QWidget):
         save_image = self.clock_plot_save_image.isChecked()
         print(f"Running Clock Plot: {option}, Save Image: {save_image}")
         scheduler = SchedulePlotter(save_image)
-        scheduler.load_schedule_data(file_path='config.json')
+        scheduler.load_schedule_data(file_path=CONFIG_FILE)
         scheduler.plot_one_schedule(option)
 
     def run_dynamic_schedule(self):
         save_image = self.dynamic_schedule_save_image.isChecked()
         print(f"Running Dynamic Schedule, Save Image: {save_image}")
-        scheduler = SheetScheduler('config.json')
+        scheduler = SheetScheduler(CONFIG_FILE)
         scheduler.plot_schedule()
         if save_image:
             scheduler.save_to_csv()
