@@ -52,31 +52,50 @@ class SheetScheduler:
 
     def get_day_category(self, day):
         """Determine the category of a given day based on workdays and transitions."""
+        # If a work day
         if day in self.config['workdays']:
-            return "Night shift"
+            previous_day = {
+                "Monday": "Sunday",
+                "Tuesday": "Monday",
+                "Wednesday": "Tuesday",
+                "Thursday": "Wednesday",
+                "Friday": "Thursday",
+                "Saturday": "Friday",
+                "Sunday": "prev_week_night"  # Special case for Sunday
+            }
 
-        day_idx = self.days_of_week.index(day)
-        prev_day = self.days_of_week[day_idx - 1]
-        next_day = self.days_of_week[(day_idx + 1) % 7]
+            # Determine if the previous "work night" applies
+            if previous_day[day] == "prev_week_night":
+                previous_work_night = self.config.get("prev_week_night", False)
+            else:
+                previous_work_night = previous_day[day] in self.config['workdays']
 
-        prev_night = self.config['prev_week_night'] if day == "Sunday" else prev_day in self.config['workdays']
-        next_night = self.config['next_week_night'] if day == "Saturday" else next_day in self.config['workdays']
+            if previous_work_night:
+                return "Night shift (Night-Any)"
+            else:
+                return "Night shift (Off-Any)"
 
-        if prev_night and next_night:
-            return "Off day (Night-Night)"
-        elif prev_night:
-            return "Off day (Night-Off)"
-        elif next_night:
-            return "Off day (Off-Night)"
+        # If a day off
         else:
-            return "Off day (Off-Off)"
+            day_idx = self.days_of_week.index(day)
+            prev_day = self.days_of_week[day_idx - 1]
+            next_day = self.days_of_week[(day_idx + 1) % 7]
+
+            prev_night = self.config['prev_week_night'] if day == "Sunday" else prev_day in self.config['workdays']
+            next_night = self.config['next_week_night'] if day == "Saturday" else next_day in self.config['workdays']
+
+            if prev_night and next_night:
+                return "Off day (Night-Night)"
+            elif prev_night:
+                return "Off day (Night-Off)"
+            elif next_night:
+                return "Off day (Off-Night)"
+            else:
+                return "Off day (Off-Off)"
 
     def get_activity_colors(self):
         """Extract activity colors from the configuration."""
-        return {
-            iv["id"]: iv["color"]
-            for sp in self.config['schedule_patterns'] for iv in sp['intervals']
-        }
+        return self.config['colors']
 
     def display_schedule(self):
         """Print the generated schedule."""
@@ -139,7 +158,7 @@ class SheetScheduler:
             plt.show()
 
 if __name__ == "__main__":
-    scheduler = SheetScheduler('config.json')
+    scheduler = SheetScheduler('config-files/example-config.json')
     scheduler.display_schedule()
     scheduler.plot_schedule()
     scheduler.save_to_png()

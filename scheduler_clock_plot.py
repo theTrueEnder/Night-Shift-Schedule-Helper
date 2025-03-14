@@ -54,7 +54,7 @@ class SchedulePlotter:
 
         arc_radius = 1
         arc_thickness = 36
-        
+                
         for interval in schedule:
             # Set the beginning and end arc angles based on the time
             start_angle = self.time_to_angle(interval["start"])
@@ -67,7 +67,8 @@ class SchedulePlotter:
             # Arc calculations
             theta = np.linspace(start_angle, end_angle, 200)
             r = np.full_like(theta, arc_radius)
-            ax.plot(theta, r, color=interval["color"], linewidth=arc_thickness, solid_capstyle='butt', label=interval["id"])
+            
+            ax.plot(theta, r, color=self.colors[interval["id"]], linewidth=arc_thickness, solid_capstyle='butt', label=interval["id"])
 
             # Calculate middle angle for labelling
             mid_angle = (start_angle + end_angle) / 2.0 % (2 * np.pi)
@@ -80,7 +81,7 @@ class SchedulePlotter:
             # Place activity label
             ax.text(mid_angle, arc_radius, interval["id"], ha='center', va='center',
                     fontsize=10, color='white', 
-                    bbox=dict(facecolor=interval["color"], edgecolor='white', boxstyle='round,pad=0.2'))
+                    bbox=dict(facecolor=self.colors[interval["id"]], edgecolor='white', boxstyle='round,pad=0.2'))
 
             # Place duration label
             ax.text(mid_angle, arc_radius - 0.30, self.duration_str(interval), ha='center', va='center',
@@ -133,8 +134,10 @@ class SchedulePlotter:
     def load_schedule_data(self, file_path):
         """Load schedule data from a JSON file."""
         with open(file_path, 'r', encoding='UTF-8') as f:
-            self.schedule_data = dict()
-            [self.schedule_data.update({schedule['title']: schedule['intervals']}) for schedule in json.load(f)['schedule_patterns']]
+            config_data = json.load(f)
+            self.schedule_data = {schedule['title']: schedule['intervals'] for schedule in config_data['schedule_patterns']}
+            
+            self.colors = config_data["colors"]
 
     def plot_all_schedules(self):
         """Plot all schedules."""
@@ -151,7 +154,7 @@ class SchedulePlotter:
 
 if __name__ == "__main__":
     plotter = SchedulePlotter(True)
-    plotter.load_schedule_data(file_path='config.json')
-    plotter.plot_one_schedule('Night shift')
+    plotter.load_schedule_data(file_path='config-files/example-config.json')
+    plotter.plot_one_schedule('Night shift (Night-Any)')
     # plotter.plot_all_schedules()
     
