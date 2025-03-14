@@ -1,0 +1,38 @@
+{
+    "workdays": [],
+    "prev_week_night": false,
+    "next_week_night": false,
+    "schedule_patterns": [
+        {
+            "title": "Night shift (Night-Any)",
+            "intervals": []
+        },
+        {
+            "title": "Night shift (Off-Any)",
+            "intervals": []
+        },
+        {
+            "title": "Off day (Night-Off)",
+            "intervals": []
+        },
+        {
+            "title": "Off day (Off-Night)",
+            "intervals": []
+        },
+        {
+            "title": "Off day (Off-Off)",
+            "intervals": []
+        },
+        {
+            "title": "Off day (Night-Night)",
+            "intervals": []
+        }
+    ],
+    "colors": {
+        "awake": "#000000",
+        "asleep": "#000000",
+        "commute": "#000000",
+        "work": "#000000",
+        "empty": "#000000"
+    }
+}
