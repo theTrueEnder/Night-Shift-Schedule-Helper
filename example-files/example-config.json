@@ -1,0 +1,173 @@
+{
+    "workdays": [
+        "Monday",
+        "Wednesday",
+        "Thursday"
+    ],
+    "prev_week_night": false,
+    "next_week_night": false,
+    "schedule_patterns": [
+        {
+            "title": "Night shift (Night-Any)",
+            "intervals": [
+                {
+                    "id": "commute",
+                    "start": "1810",
+                    "end": "1900"
+                },
+                {
+                    "id": "work",
+                    "start": "1900",
+                    "end": "0715"
+                },
+                {
+                    "id": "commute",
+                    "start": "0715",
+                    "end": "0800"
+                },
+                {
+                    "id": "asleep",
+                    "start": "0800",
+                    "end": "1810"
+                }
+            ]
+        },
+        {
+            "title": "Night shift (Off-Any)",
+            "intervals": [
+                {
+                    "id": "awake",
+                    "start": "0400",
+                    "end": "1200"
+                },
+                {
+                    "id": "asleep",
+                    "start": "1200",
+                    "end": "1810"
+                },
+                {
+                    "id": "commute",
+                    "start": "1810",
+                    "end": "1900"
+                },
+                {
+                    "id": "work",
+                    "start": "1900",
+                    "end": "0000"
+                },
+                {
+                    "id": "asleep",
+                    "start": "0000",
+                    "end": "0400"
+                }
+            ]
+        },
+        {
+            "title": "Off day (Night-Off)",
+            "intervals": [
+                {
+                    "id": "commute",
+                    "start": "0715",
+                    "end": "0800"
+                },
+                {
+                    "id": "asleep",
+                    "start": "0800",
+                    "end": "1300"
+                },
+                {
+                    "id": "awake",
+                    "start": "1300",
+                    "end": "2300"
+                },
+                {
+                    "id": "asleep",
+                    "start": "2300",
+                    "end": "0000"
+                },
+                {
+                    "id": "work",
+                    "start": "0000",
+                    "end": "0715"
+                }
+            ]
+        },
+        {
+            "title": "Off day (Off-Night)",
+            "intervals": [
+                {
+                    "id": "asleep",
+                    "start": "0100",
+                    "end": "0800"
+                },
+                {
+                    "id": "awake",
+                    "start": "0800",
+                    "end": "2200"
+                },
+                {
+                    "id": "asleep",
+                    "start": "2200",
+                    "end": "0700"
+                }
+            ]
+        },
+        {
+            "title": "Off day (Off-Off)",
+            "intervals": [
+                {
+                    "id": "asleep",
+                    "start": "0000",
+                    "end": "0730"
+                },
+                {
+                    "id": "awake",
+                    "start": "0730",
+                    "end": "2230"
+                },
+                {
+                    "id": "asleep",
+                    "start": "2230",
+                    "end": "0730"
+                }
+            ]
+        },
+        {
+            "title": "Off day (Night-Night)",
+            "intervals": [
+                {
+                    "id": "work",
+                    "start": "0000",
+                    "end": "0715"
+                },
+                {
+                    "id": "commute",
+                    "start": "0715",
+                    "end": "0800"
+                },
+                {
+                    "id": "asleep",
+                    "start": "0800",
+                    "end": "1300"
+                },
+                {
+                    "id": "awake",
+                    "start": "1300",
+                    "end": "2030"
+                },
+                {
+                    "id": "asleep",
+                    "start": "2030",
+                    "end": "0000"
+                }
+            ]
+        }
+    ],
+    "colors": {
+        "awake": "#55ff7f",
+        "asleep": "#0055ff",
+        "commute": "#ff5500",
+        "work": "#5500ff",
+        "empty": "#FFFFFF"
+    }
+}
