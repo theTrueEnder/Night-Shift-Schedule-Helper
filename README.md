@@ -35,6 +35,7 @@ Once you have the dependencies installed (see Installation), adjust the [`config
 - [ ] Fix config file problem
 - [ ] Fix double plot preview
 - [ ] Meals
+- [ ] Reduce `requirements.txt`
 - [X] Fix clock plot colors
 - [X] Rename this repo to more accurately reflect what this is
 - [X] GUI layout alignment
