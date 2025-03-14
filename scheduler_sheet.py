@@ -101,15 +101,15 @@ class SheetScheduler:
         """Print the generated schedule."""
         print(self.schedule)
 
-    def save_to_csv(self, filename="results/dynamic_schedule.csv"):
+    def save_to_csv(self, filename="results/schedule-sheet.csv"):
         """Save the schedule to a CSV file."""
         self.schedule.to_csv(filename)
-        print(f'Saved dynamic schedule to CSV at {filename}.')
+        print(f'Saved schedule sheet to CSV at {filename}.')
 
-    def save_to_png(self, filename="results/dynamic_schedule.png"):
+    def save_to_png(self, filename="results/schedule-sheet.png"):
         """Save the plotted schedule to a PNG file."""
         self.plot_schedule(save_path=filename)
-        print(f'Saved dynamic schedule to PNG at {filename}.')
+        print(f'Saved schedule sheet to PNG at {filename}.')
 
     def plot_schedule(self, save_path=None):
         """Visualize the schedule using a heatmap."""

@@ -94,7 +94,7 @@ class WorkScheduleApp(QWidget):
         verticalSpacer = QSpacerItem(20, 30, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         main_layout.addItem(verticalSpacer)
         
-        # Clock Plot and Dynamic Schedule Section (Side by Side)
+        # Clock Plot and Schedule Sheet Section (Side by Side)
         plot_schedule_layout = QHBoxLayout()
 
 
@@ -119,22 +119,22 @@ class WorkScheduleApp(QWidget):
 
         plot_schedule_layout.addLayout(clock_plot_layout)
 
-        # Generate Dynamic Schedule Section
-        dynamic_schedule_layout = QVBoxLayout()
-        dynamic_schedule_layout.addWidget(QLabel("<h3>Generate Dynamic Schedule:</h3>"))
+        # Generate Schedule Sheet Section
+        schedule_sheet_layout = QVBoxLayout()
+        schedule_sheet_layout.addWidget(QLabel("<h3>Generate Schedule Sheet:</h3>"))
         
         
-        self.dynamic_schedule_save_image = QCheckBox("Save Results (PNG, CSV)")
-        self.dynamic_schedule_save_image.setChecked(True)
-        dynamic_schedule_layout.addWidget(self.dynamic_schedule_save_image)
+        self.schedule_sheet_save_image = QCheckBox("Save Results (PNG, CSV)")
+        self.schedule_sheet_save_image.setChecked(True)
+        schedule_sheet_layout.addWidget(self.schedule_sheet_save_image)
         
 
-        dynamic_schedule_btn = QPushButton("Run")
-        dynamic_schedule_btn.clicked.connect(self.run_dynamic_schedule)
-        dynamic_schedule_layout.addWidget(dynamic_schedule_btn)
-        dynamic_schedule_layout.addStretch()
+        schedule_sheet_btn = QPushButton("Run")
+        schedule_sheet_btn.clicked.connect(self.run_schedule_sheet)
+        schedule_sheet_layout.addWidget(schedule_sheet_btn)
+        schedule_sheet_layout.addStretch()
 
-        plot_schedule_layout.addLayout(dynamic_schedule_layout)
+        plot_schedule_layout.addLayout(schedule_sheet_layout)
 
         main_layout.addLayout(plot_schedule_layout)
         main_layout.addItem(verticalSpacer)
@@ -198,9 +198,9 @@ class WorkScheduleApp(QWidget):
         scheduler.load_schedule_data(file_path=CONFIG_FILE)
         scheduler.plot_one_schedule(option)
 
-    def run_dynamic_schedule(self):
-        save_image = self.dynamic_schedule_save_image.isChecked()
-        print(f"Running Dynamic Schedule, Save Image: {save_image}")
+    def run_schedule_sheet(self):
+        save_image = self.schedule_sheet_save_image.isChecked()
+        print(f"Running Schedule Sheet, Save Image: {save_image}")
         scheduler = SheetScheduler(CONFIG_FILE)
         scheduler.plot_schedule()
         if save_image:
