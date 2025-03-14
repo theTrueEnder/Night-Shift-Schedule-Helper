@@ -1,7 +1,7 @@
 results/*
-!results/example_night_shift.png
-!results/example_dynamic_schedule.png
-!results/example_dynamic_schedule.csv
+!results/example-night-shift.png
+!results/example-schedule-sheet.png
+!results/example-schedule-sheet.csv
 myschedules.json
 dynamic_schedule.csv
 old_clock_plot.py
